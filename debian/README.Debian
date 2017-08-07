@@ -1,0 +1,6 @@
+godot for Debian
+---------------
+
+This package uses the built-in libssl-1.0.2 instead of the system libssl.
+
+ -- Kienan Stewart <kienan.stewart@burntworld.ca>  Fri, 04 Aug 2017 15:46:25 -0400

@@ -1,0 +1,60 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+export DH_VERBOSE = 1
+# @see chapter 4.9.1 in https://www.debian.org/doc/debian-policy/ch-source.html
+NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+override_dh_auto_build:
+	dh_auto_build
+	scons platform=x11 target=release_debug bits=64 use_llvm=yes builtin_openssl=yes -j $(NUMJOBS)
+
+# maybe there is a built-in helper for scons
+override_dh_clean:
+	dh_clean
+	scons platform=x11 builtin_openssl=yes -c
+	find $(CURDIR) -iname "*.pyc" -exec rm {} +
+	find $(CURDIR) -iname ".o" -exec rm {} +
+	find $(CURDIR) -iname ".a" -exec rm {} +
+	rm -rf bin/
+	find . -iname ".sconsign.dblite" -exec {} +
+	rm -f core/global_defaults.cpp
+	rm -f core/script_encryption_key.cpp
+	rm -f core/version_generated.h
+	rm -f drivers/unix/os_unix_global_settings_path.cpp
+	rm -f editor/register_exporters.cpp
+	rm -f modules/register_module_types.cpp
+	rm -f platform/android/logo.h
+	rm -f platform/bb10/logo.h
+	rm -f platform/haiku/logo.h
+	rm -f platform/iphone/logo.h
+	rm -f platform/javascript/logo.h
+	rm -f platform/osx/logo.h
+	rm -f platform/server/logo.h
+	rm -f platform/windows/logo.h
+	rm -f platform/winrt/logo.h
+	rm -f platform/x11/logo.h
+
+
+override_dh_auto_install:
+	dh_auto_install
+	install -d $(CURDIR)/debian/tmp/usr/bin
+	install -m 755 bin/godot.x11.opt.tools.64.llvm $(CURDIR)/debian/tmp/usr/bin/godot
+
+%:
+	dh $@
+
+
+# dh_make generated override targets
+# This is example for Cmake (See https://bugs.debian.org/641051 )
+#override_dh_auto_configure:
+#	dh_auto_configure -- #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
+

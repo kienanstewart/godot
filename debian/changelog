@@ -1,0 +1,6 @@
+godot (2.1.3-stable-1) UNRELEASED; urgency=medium
+
+  * Initial release (Closes: #793057)
+  * This is my first package
+
+ -- Kienan Stewart <kienan.stewart@burntworld.ca>  Fri, 04 Aug 2017 15:46:25 -0400
