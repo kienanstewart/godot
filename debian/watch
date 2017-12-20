@@ -1,0 +1,3 @@
+version=4
+  https://github.com/godotengine/godot/releases/ \
+  /godotengine/godot/archive/@ANY_VERSION@\.tar\.gz
