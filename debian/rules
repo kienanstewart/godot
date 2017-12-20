@@ -15,7 +15,9 @@ NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 
 override_dh_auto_build:
 	dh_auto_build
-	scons platform=x11 target=release_debug bits=64 use_llvm=yes builtin_openssl=yes -j $(NUMJOBS)
+	BUILD_REVISION=debian scons platform=x11 tools=yes target=release_debug bits=64 use_llvm=yes builtin_openssl=yes -j $(NUMJOBS)
+	BUILD_REVISION=debian scons platform=x11 tools=no target=release bits=64 use_llvm=yes builtin_openssl=yes -j $(NUMJOBS)
+	BUILD_REVISION=debian scons platform=server tools=yes target=release_debug bits=64 use_llvm=yes builtin_openssl=yes -j $(NUMJOBS)
 
 # maybe there is a built-in helper for scons
 override_dh_clean:
@@ -47,7 +49,11 @@ override_dh_clean:
 override_dh_auto_install:
 	dh_auto_install
 	install -d $(CURDIR)/debian/tmp/usr/bin
-	install -m 755 bin/godot.x11.opt.tools.64.llvm $(CURDIR)/debian/tmp/usr/bin/godot
+	echo -n "Bin files: "
+	ls -la bin/
+	install -m 755 bin/godot.x11.opt.tools.64.llvm $(CURDIR)/debian/tmp/usr/bin/godot2
+	install -m 755 bin/godot.x11.opt.64.llvm $(CURDIR)/debian/tmp/usr/bin/godot2-runner
+	install -m 755 bin/godot_server.server.opt.tools.64 $(CURDIR)/debian/tmp/usr/bin/godot2-server
 
 %:
 	dh $@

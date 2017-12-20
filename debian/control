@@ -9,10 +9,24 @@ Homepage: https://godotengine.org
 Vcs-Git: https://github.com/godotengine/godot.git
 Vcs-Browser: https://github.com/godotengine/godot
 
-Package: godot
+Package: godot2
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Full 2D and 3D game engine with editor
  Godot is an advanced, feature packed, multi-platform 2D and 3D game engine.
  It provides a huge set of common tools, so you can just focus on making
  your game without reinventing the wheel.
+
+Package: godot2-runner
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Godot game engine run-time
+ Godot is an advanced, feature packed, multi-platform 2D and 3D game engine.
+ This package allows games to be run from source or data-pack.
+
+Package: godot2-server
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Headless Godot game engine run-time
+ Godot is an advanced, feature packge, multi-platform 2D and 3D game engine.
+ This package provides a command-line only version of the program.
