@@ -3,7 +3,7 @@
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
+/*                      https://godotengine.org                          */
 /*************************************************************************/
 /* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
 /* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
@@ -1257,6 +1257,8 @@ public:
 	virtual void set_boot_image(const Image &p_image, const Color &p_color, bool p_scale);
 	virtual void set_default_clear_color(const Color &p_color);
 	virtual Color get_default_clear_color() const;
+
+	virtual void set_time_scale(float p_scale);
 
 	VisualServerRaster(Rasterizer *p_rasterizer);
 	~VisualServerRaster();

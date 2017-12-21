@@ -3,7 +3,7 @@
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
+/*                      https://godotengine.org                          */
 /*************************************************************************/
 /* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
 /* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
@@ -689,6 +689,7 @@ public:
 	FUNC3(set_boot_image, const Image &, const Color &, bool);
 	FUNC1(set_default_clear_color, const Color &);
 	FUNC0RC(Color, get_default_clear_color);
+	FUNC1(set_time_scale, float);
 
 	FUNC0R(RID, get_test_cube);
 

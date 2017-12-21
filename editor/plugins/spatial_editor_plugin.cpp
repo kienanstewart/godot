@@ -3,7 +3,7 @@
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
+/*                      https://godotengine.org                          */
 /*************************************************************************/
 /* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
 /* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
@@ -260,6 +260,8 @@ ObjectID SpatialEditorViewport::_select_ray(const Point2 &p_pos, bool p_append, 
 	r_includes_current = false;
 
 	List<_RayResult> results;
+	Vector<Spatial *> subscenes = Vector<Spatial *>();
+	Vector<Vector3> subscenes_positions = Vector<Vector3>();
 
 	for (int i = 0; i < instances.size(); i++) {
 
@@ -275,11 +277,21 @@ ObjectID SpatialEditorViewport::_select_ray(const Point2 &p_pos, bool p_append, 
 
 		Ref<SpatialEditorGizmo> seg = spat->get_gizmo();
 
-		if (!seg.is_valid())
-			continue;
+		if (!seg.is_valid() || found_gizmos.has(seg)) {
+			Node *subscene_candidate = spat;
+			Vector3 source_click_spatial_pos = spat->get_global_transform().origin;
 
-		if (found_gizmos.has(seg))
+			while ((subscene_candidate->get_owner() != NULL) && (subscene_candidate->get_owner() != editor->get_edited_scene()))
+				subscene_candidate = subscene_candidate->get_owner();
+
+			spat = subscene_candidate->cast_to<Spatial>();
+			if (spat && (spat->get_filename() != "") && (subscene_candidate->get_owner() != NULL)) {
+				subscenes.push_back(spat);
+				subscenes_positions.push_back(source_click_spatial_pos);
+			}
+
 			continue;
+		}
 
 		found_gizmos.insert(seg);
 		Vector3 point;
@@ -303,6 +315,23 @@ ObjectID SpatialEditorViewport::_select_ray(const Point2 &p_pos, bool p_append, 
 		res.item = spat;
 		res.depth = dist;
 		res.handle = handle;
+		results.push_back(res);
+	}
+	for (int idx_subscene = 0; idx_subscene < subscenes.size(); idx_subscene++) {
+
+		Spatial *subscene = subscenes.get(idx_subscene);
+		float dist = ray.cross(subscenes_positions.get(idx_subscene) - pos).length();
+
+		if ((dist < 0) || (dist > 1.2))
+			continue;
+
+		if (editor_selection->is_selected(subscene))
+			r_includes_current = true;
+
+		_RayResult res;
+		res.item = subscene;
+		res.depth = dist;
+		res.handle = -1;
 		results.push_back(res);
 	}
 
@@ -595,7 +624,7 @@ bool SpatialEditorViewport::_gizmo_select(const Vector2 &p_screenpos, bool p_hil
 		return false;
 	if (get_selected_count() == 0) {
 		if (p_hilite_only)
-			spatial_editor->select_gizmo_hilight_axis(-1);
+			spatial_editor->select_gizmo_highlight_axis(-1);
 		return false;
 	}
 
@@ -629,7 +658,7 @@ bool SpatialEditorViewport::_gizmo_select(const Vector2 &p_screenpos, bool p_hil
 
 			if (p_hilite_only) {
 
-				spatial_editor->select_gizmo_hilight_axis(col_axis);
+				spatial_editor->select_gizmo_highlight_axis(col_axis);
 
 			} else {
 				//handle rotate
@@ -669,7 +698,7 @@ bool SpatialEditorViewport::_gizmo_select(const Vector2 &p_screenpos, bool p_hil
 
 			if (p_hilite_only) {
 
-				spatial_editor->select_gizmo_hilight_axis(col_axis + 3);
+				spatial_editor->select_gizmo_highlight_axis(col_axis + 3);
 			} else {
 				//handle rotate
 				_edit.mode = TRANSFORM_ROTATE;
@@ -681,7 +710,7 @@ bool SpatialEditorViewport::_gizmo_select(const Vector2 &p_screenpos, bool p_hil
 	}
 
 	if (p_hilite_only)
-		spatial_editor->select_gizmo_hilight_axis(-1);
+		spatial_editor->select_gizmo_highlight_axis(-1);
 
 	return false;
 }
@@ -739,8 +768,7 @@ void SpatialEditorViewport::_list_select(InputEventMouseButton b) {
 			selection_menu->add_item(spat->get_name());
 			selection_menu->set_item_icon(i, icon);
 			selection_menu->set_item_metadata(i, node_path);
-			selection_menu->set_item_tooltip(i, String(spat->get_name()) +
-														"\nType: " + spat->get_type() + "\nPath: " + node_path);
+			selection_menu->set_item_tooltip(i, String(spat->get_name()) + "\nType: " + spat->get_type() + "\nPath: " + node_path);
 		}
 
 		selection_menu->set_global_pos(Vector2(b.global_x, b.global_y));
@@ -1140,7 +1168,7 @@ void SpatialEditorViewport::_sinput(const InputEvent &p_event) {
 						spatial_editor->set_over_gizmo_handle(selected_handle);
 						spatial_editor->get_selected()->update_gizmo();
 						if (selected_handle != -1)
-							spatial_editor->select_gizmo_hilight_axis(-1);
+							spatial_editor->select_gizmo_highlight_axis(-1);
 					}
 				}
 			}
@@ -2271,7 +2299,7 @@ SpatialEditorSelectedItem::~SpatialEditorSelectedItem() {
 		VisualServer::get_singleton()->free(sbox_instance);
 }
 
-void SpatialEditor::select_gizmo_hilight_axis(int p_axis) {
+void SpatialEditor::select_gizmo_highlight_axis(int p_axis) {
 
 	for (int i = 0; i < 3; i++) {
 
@@ -3442,7 +3470,7 @@ void SpatialEditor::_bind_methods() {
 
 void SpatialEditor::clear() {
 
-	settings_fov->set_val(EDITOR_DEF("3d_editor/default_fov", 60.0));
+	settings_fov->set_val(EDITOR_DEF("3d_editor/default_fov", 55.0));
 	settings_znear->set_val(EDITOR_DEF("3d_editor/default_z_near", 0.1));
 	settings_zfar->set_val(EDITOR_DEF("3d_editor/default_z_far", 1500.0));
 
@@ -3742,7 +3770,7 @@ SpatialEditor::SpatialEditor(EditorNode *p_editor) {
 	settings_fov->set_max(179);
 	settings_fov->set_min(1);
 	settings_fov->set_step(0.01);
-	settings_fov->set_val(EDITOR_DEF("3d_editor/default_fov", 60.0));
+	settings_fov->set_val(EDITOR_DEF("3d_editor/default_fov", 55.0));
 	settings_vbc->add_margin_child(TTR("Perspective FOV (deg.):"), settings_fov);
 
 	settings_znear = memnew(SpinBox);

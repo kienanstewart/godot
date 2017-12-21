@@ -3,7 +3,7 @@
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
+/*                      https://godotengine.org                          */
 /*************************************************************************/
 /* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
 /* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
@@ -1046,6 +1046,8 @@ public:
 	virtual bool is_shader(const RID &p_rid) const = 0;
 
 	virtual bool is_canvas_light_occluder(const RID &p_rid) const = 0;
+
+	virtual void set_time_scale(float p_scale) = 0;
 
 	virtual void free(const RID &p_rid) = 0;
 

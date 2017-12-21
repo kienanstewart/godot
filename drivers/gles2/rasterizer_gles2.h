@@ -3,7 +3,7 @@
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
+/*                      https://godotengine.org                          */
 /*************************************************************************/
 /* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
 /* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
@@ -53,11 +53,11 @@
 #endif
 
 #include "drivers/gles2/shader_compiler_gles2.h"
-#include "drivers/gles2/shaders/blur.glsl.h"
-#include "drivers/gles2/shaders/canvas.glsl.h"
-#include "drivers/gles2/shaders/canvas_shadow.glsl.h"
-#include "drivers/gles2/shaders/copy.glsl.h"
-#include "drivers/gles2/shaders/material.glsl.h"
+#include "drivers/gles2/shaders/blur.glsl.gen.h"
+#include "drivers/gles2/shaders/canvas.glsl.gen.h"
+#include "drivers/gles2/shaders/canvas_shadow.glsl.gen.h"
+#include "drivers/gles2/shaders/copy.glsl.gen.h"
+#include "drivers/gles2/shaders/material.glsl.gen.h"
 #include "servers/visual/particle_system_sw.h"
 
 /**
@@ -1251,6 +1251,7 @@ class RasterizerGLES2 : public Rasterizer {
 	Size2 window_size;
 	VS::ViewportRect viewport;
 	double last_time;
+	double scaled_time;
 	double time_delta;
 	uint64_t frame;
 	uint64_t scene_pass;
@@ -1259,6 +1260,7 @@ class RasterizerGLES2 : public Rasterizer {
 	VS::ScenarioDebugMode current_debug;
 	RID overdraw_material;
 	float shader_time_rollback;
+	float time_scale;
 
 	mutable MaterialShaderGLES2 material_shader;
 	mutable CanvasShaderGLES2 canvas_shader;
@@ -1652,6 +1654,8 @@ public:
 	virtual bool is_shader(const RID &p_rid) const;
 
 	virtual bool is_canvas_light_occluder(const RID &p_rid) const;
+
+	virtual void set_time_scale(float p_scale);
 
 	virtual void free(const RID &p_rid);
 

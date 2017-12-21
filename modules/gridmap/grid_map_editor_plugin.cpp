@@ -3,7 +3,7 @@
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
+/*                      https://godotengine.org                          */
 /*************************************************************************/
 /* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
 /* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
@@ -519,12 +519,12 @@ bool GridMapEditor::forward_spatial_input_event(Camera *p_camera, const InputEve
 
 				if (p_event.mouse_button.button_index == BUTTON_WHEEL_UP && (p_event.mouse_button.mod.command || p_event.mouse_button.mod.shift)) {
 					if (p_event.mouse_button.pressed)
-						floor->set_val(floor->get_val() + 1);
+						floor->set_val(floor->get_val() + p_event.mouse_button.factor);
 
 					return true; //eaten
 				} else if (p_event.mouse_button.button_index == BUTTON_WHEEL_DOWN && (p_event.mouse_button.mod.command || p_event.mouse_button.mod.shift)) {
 					if (p_event.mouse_button.pressed)
-						floor->set_val(floor->get_val() - 1);
+						floor->set_val(floor->get_val() - p_event.mouse_button.factor);
 					return true;
 				}
 

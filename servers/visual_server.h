@@ -3,7 +3,7 @@
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
+/*                      https://godotengine.org                          */
 /*************************************************************************/
 /* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
 /* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
@@ -60,7 +60,7 @@ protected:
 	RID test_texture;
 	RID white_texture;
 	RID test_material;
-	RID material_2d[16];
+	RID material_2d[32];
 
 	static VisualServer *(*create_func)();
 	static void _bind_methods();
@@ -1120,7 +1120,7 @@ public:
 
 	/* Materials for 2D on 3D */
 
-	RID material_2d_get(bool p_shaded, bool p_transparent, bool p_cut_alpha, bool p_opaque_prepass);
+	RID material_2d_get(bool p_shaded, bool p_transparent, bool p_double_sided, bool p_ontop, bool p_cut_alpha, bool p_opaque_prepass);
 
 	/* TESTING */
 
@@ -1137,6 +1137,8 @@ public:
 	virtual void set_boot_image(const Image &p_image, const Color &p_color, bool p_scale) = 0;
 	virtual void set_default_clear_color(const Color &p_color) = 0;
 	virtual Color get_default_clear_color() const = 0;
+
+	virtual void set_time_scale(float p_scale) = 0;
 
 	enum Features {
 		FEATURE_SHADERS,

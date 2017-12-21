@@ -3,7 +3,7 @@
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
+/*                      https://godotengine.org                          */
 /*************************************************************************/
 /* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
 /* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
@@ -31,6 +31,11 @@
 #include "io/ip.h"
 
 PacketPeerUDP *(*PacketPeerUDP::_create)() = NULL;
+
+void PacketPeerUDP::set_blocking_mode(bool p_enable) {
+
+	blocking = p_enable;
+}
 
 String PacketPeerUDP::_get_packet_ip() const {
 
@@ -79,4 +84,6 @@ PacketPeerUDP *PacketPeerUDP::create() {
 }
 
 PacketPeerUDP::PacketPeerUDP() {
+
+	blocking = true;
 }
