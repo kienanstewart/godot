@@ -12,12 +12,13 @@ NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 #export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
 # package maintainers to append LDFLAGS
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+SCONS_OPTIONS = bits=64 use_llvm=yes builtin_openssl=no builtin_freetype=no builtin_glew=no builtin_libogg=no builtin_libpng=no builtin_libtheora=no builtin_libvorbis=no builtin_libwebp=no builtin_opus=no builtin_zlib=no
 
 override_dh_auto_build:
 	dh_auto_build
-	BUILD_REVISION=debian scons platform=x11 tools=yes target=release_debug bits=64 use_llvm=yes builtin_openssl=yes -j $(NUMJOBS)
-	BUILD_REVISION=debian scons platform=x11 tools=no target=release bits=64 use_llvm=yes builtin_openssl=yes -j $(NUMJOBS)
-	BUILD_REVISION=debian scons platform=server tools=yes target=release_debug bits=64 use_llvm=yes builtin_openssl=yes -j $(NUMJOBS)
+	BUILD_REVISION=debian scons platform=x11 tools=yes target=release_debug $(SCONS_OPTIONS) -j $(NUMJOBS)
+	BUILD_REVISION=debian scons platform=x11 tools=no target=release $(SCONS_OPTIONS) -j $(NUMJOBS)
+	BUILD_REVISION=debian scons platform=server tools=yes target=release_debug $(SCONS_OPTIONS) -j $(NUMJOBS)
 
 # maybe there is a built-in helper for scons
 override_dh_clean:

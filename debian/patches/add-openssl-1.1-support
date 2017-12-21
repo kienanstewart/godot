@@ -1,0 +1,184 @@
+Description: Add OpenSSL 1.1 support
+ Cherry-picked commit 8d246dfc1d787756d42b3026cb4935bb37d0e49b to add supprot for
+ OpenSSL 1.1 in Godot 2.1.x.
+ .
+ godot (2.1.4-stable-1) UNRELEASED; urgency=medium
+ .
+   * Initial release (Closes: #793057)
+   * This is my first package
+Author: Kienan Stewart <kienan.stewart@burntworld.ca>
+Bug-Debian: https://bugs.debian.org/793057
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: 2017-12-21
+
+--- godot-2.1.4-stable.orig/modules/openssl/stream_peer_openssl.cpp
++++ godot-2.1.4-stable/modules/openssl/stream_peer_openssl.cpp
+@@ -28,6 +28,18 @@
+ /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
+ /*************************************************************************/
+ #include "stream_peer_openssl.h"
++
++// Compatibility with OpenSSL 1.1.0.
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++#define BIO_set_num(b, n)
++#else
++#define BIO_set_num(b, n) ((b)->num = (n))
++
++#define BIO_set_init(b, i) ((b)->init = (i))
++#define BIO_set_data(b, p) ((b)->ptr = (p))
++#define BIO_get_data(b) ((b)->ptr)
++#endif
++
+ //hostname matching code from curl
+ 
+ //#include <openssl/applink.c> // To prevent crashing (see the OpenSSL FAQ)
+@@ -165,10 +177,10 @@ int StreamPeerOpenSSL::_cert_verify_call
+ }
+ 
+ int StreamPeerOpenSSL::_bio_create(BIO *b) {
+-	b->init = 1;
+-	b->num = 0;
+-	b->ptr = NULL;
+-	b->flags = 0;
++	BIO_set_init(b, 1);
++	BIO_set_num(b, 0);
++	BIO_set_data(b, NULL);
++	BIO_clear_flags(b, ~0);
+ 	return 1;
+ }
+ 
+@@ -176,9 +188,9 @@ int StreamPeerOpenSSL::_bio_destroy(BIO
+ 	if (b == NULL)
+ 		return 0;
+ 
+-	b->ptr = NULL; /* sb_tls_remove() will free it */
+-	b->init = 0;
+-	b->flags = 0;
++	BIO_set_data(b, NULL); /* sb_tls_remove() will free it */
++	BIO_set_init(b, 0);
++	BIO_clear_flags(b, ~0);
+ 	return 1;
+ }
+ 
+@@ -186,7 +198,7 @@ int StreamPeerOpenSSL::_bio_read(BIO *b,
+ 
+ 	if (buf == NULL || len <= 0) return 0;
+ 
+-	StreamPeerOpenSSL *sp = (StreamPeerOpenSSL *)b->ptr;
++	StreamPeerOpenSSL *sp = (StreamPeerOpenSSL *)BIO_get_data(b);
+ 
+ 	ERR_FAIL_COND_V(sp == NULL, 0);
+ 
+@@ -220,7 +232,7 @@ int StreamPeerOpenSSL::_bio_write(BIO *b
+ 
+ 	if (buf == NULL || len <= 0) return 0;
+ 
+-	StreamPeerOpenSSL *sp = (StreamPeerOpenSSL *)b->ptr;
++	StreamPeerOpenSSL *sp = (StreamPeerOpenSSL *)BIO_get_data(b);
+ 
+ 	ERR_FAIL_COND_V(sp == NULL, 0);
+ 
+@@ -266,6 +278,26 @@ int StreamPeerOpenSSL::_bio_puts(BIO *b,
+ 	return _bio_write(b, str, strlen(str));
+ }
+ 
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++BIO_METHOD *StreamPeerOpenSSL::_bio_method = NULL;
++
++BIO_METHOD *StreamPeerOpenSSL::_get_bio_method() {
++	if (_bio_method) // already initialized.
++		return _bio_method;
++
++	/* it's a source/sink BIO */
++	_bio_method = BIO_meth_new(100 | 0x400, "streampeer glue");
++	BIO_meth_set_write(_bio_method, _bio_write);
++	BIO_meth_set_read(_bio_method, _bio_read);
++	BIO_meth_set_puts(_bio_method, _bio_puts);
++	BIO_meth_set_gets(_bio_method, _bio_gets);
++	BIO_meth_set_ctrl(_bio_method, _bio_ctrl);
++	BIO_meth_set_create(_bio_method, _bio_create);
++	BIO_meth_set_destroy(_bio_method, _bio_destroy);
++
++	return _bio_method;
++}
++#else
+ BIO_METHOD StreamPeerOpenSSL::_bio_method = {
+ 	/* it's a source/sink BIO */
+ 	(100 | 0x400),
+@@ -279,6 +311,11 @@ BIO_METHOD StreamPeerOpenSSL::_bio_metho
+ 	_bio_destroy
+ };
+ 
++BIO_METHOD *StreamPeerOpenSSL::_get_bio_method() {
++	return &_bio_method;
++}
++#endif
++
+ Error StreamPeerOpenSSL::connect(Ref<StreamPeer> p_base, bool p_validate_certs, const String &p_for_hostname) {
+ 
+ 	if (connected)
+@@ -352,8 +389,8 @@ Error StreamPeerOpenSSL::connect(Ref<Str
+ 	}
+ 
+ 	ssl = SSL_new(ctx);
+-	bio = BIO_new(&_bio_method);
+-	bio->ptr = this;
++	bio = BIO_new(_get_bio_method());
++	BIO_set_data(bio, this);
+ 	SSL_set_bio(ssl, bio, bio);
+ 
+ 	if (p_for_hostname != String()) {
+@@ -554,7 +591,9 @@ void StreamPeerOpenSSL::initialize_ssl()
+ 	load_certs_func = _load_certs;
+ 
+ 	_create = _create_func;
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ 	CRYPTO_malloc_init(); // Initialize malloc, free, etc for OpenSSL's use
++#endif
+ 	SSL_library_init(); // Initialize OpenSSL's SSL libraries
+ 	SSL_load_error_strings(); // Load SSL error strings
+ 	ERR_load_BIO_strings(); // Load BIO error strings
+--- godot-2.1.4-stable.orig/modules/openssl/stream_peer_openssl.h
++++ godot-2.1.4-stable/modules/openssl/stream_peer_openssl.h
+@@ -53,7 +53,12 @@ private:
+ 	static int _bio_gets(BIO *b, char *buf, int len);
+ 	static int _bio_puts(BIO *b, const char *str);
+ 
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	static BIO_METHOD *_bio_method;
++#else
+ 	static BIO_METHOD _bio_method;
++#endif
++	static BIO_METHOD *_get_bio_method();
+ 
+ 	static bool _match_host_name(const char *name, const char *hostname);
+ 	static Error _match_common_name(const char *hostname, const X509 *server_cert);
+--- godot-2.1.4-stable.orig/platform/x11/detect.py
++++ godot-2.1.4-stable/platform/x11/detect.py
+@@ -145,15 +145,6 @@ def configure(env):
+     env.ParseConfig('pkg-config xrandr --cflags --libs')
+ 
+     if (env['builtin_openssl'] == 'no'):
+-        # Currently not compatible with OpenSSL 1.1.0+
+-        # https://github.com/godotengine/godot/issues/8624
+-        import subprocess
+-        openssl_version = subprocess.check_output(['pkg-config', 'openssl', '--modversion']).strip('\n')
+-        if (openssl_version >= "1.1.0"):
+-            print("Error: Found system-installed OpenSSL %s, currently only supporting version 1.0.x." % openssl_version)
+-            print("Aborting.. You can compile with 'builtin_openssl=yes' to use the bundled version.\n")
+-            sys.exit(255)
+-
+         env.ParseConfig('pkg-config openssl --cflags --libs')
+ 
+     if (env['builtin_libwebp'] == 'no'):
