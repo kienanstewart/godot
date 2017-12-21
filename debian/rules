@@ -22,12 +22,14 @@ override_dh_auto_build:
 # maybe there is a built-in helper for scons
 override_dh_clean:
 	dh_clean
-	scons platform=x11 builtin_openssl=yes -c
+	scons use_llvm=yes -c
 	find $(CURDIR) -iname "*.pyc" -exec rm {} +
 	find $(CURDIR) -iname ".o" -exec rm {} +
 	find $(CURDIR) -iname ".a" -exec rm {} +
 	rm -rf bin/
-	find . -iname ".sconsign.dblite" -exec {} +
+	find . -iname ".sconsign.dblite" -exec rm {} +
+	find . -iname "*.gen.cpp" -exec rm {} +
+	find . -iname "*.gen.h" -exec rm {} +
 	rm -f core/global_defaults.cpp
 	rm -f core/script_encryption_key.cpp
 	rm -f core/version_generated.h
