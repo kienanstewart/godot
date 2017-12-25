@@ -1,0 +1,36 @@
+Description: Change CA Certificates path
+ Use the system path instead of packaged thirdparty ca-certificates.
+ .
+ godot (2.1.4-stable-1) UNRELEASED; urgency=medium
+ .
+   * Initial release (Closes: #793057)
+   * This is my first package
+Author: Kienan Stewart <kienan.stewart@burntworld.ca>
+Bug-Debian: https://bugs.debian.org/793057
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: 2017-12-25
+
+--- godot-2.1.4-stable.orig/editor/SCsub
++++ godot-2.1.4-stable/editor/SCsub
+@@ -172,8 +172,8 @@ if (env["tools"] == "yes"):
+     env.Command("#editor/doc_data_compressed.gen.h", "#doc/base/classes.xml", make_doc_header)
+ 
+     # Certificates
+-    env.Depends("#editor/certs_compressed.gen.h", "#thirdparty/certs/ca-certificates.crt")
+-    env.Command("#editor/certs_compressed.gen.h", "#thirdparty/certs/ca-certificates.crt", make_certs_header)
++    env.Depends("#editor/certs_compressed.gen.h", "/etc/ssl/certs/ca-certificates.crt")
++    env.Command("#editor/certs_compressed.gen.h", "/etc/ssl/certs/ca-certificates.crt", make_certs_header)
+ 
+     import glob
+     path = env.Dir('.').abspath

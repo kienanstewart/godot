@@ -172,8 +172,8 @@ if (env["tools"] == "yes"):
     env.Command("#editor/doc_data_compressed.gen.h", "#doc/base/classes.xml", make_doc_header)
 
     # Certificates
-    env.Depends("#editor/certs_compressed.gen.h", "#thirdparty/certs/ca-certificates.crt")
-    env.Command("#editor/certs_compressed.gen.h", "#thirdparty/certs/ca-certificates.crt", make_certs_header)
+    env.Depends("#editor/certs_compressed.gen.h", "/etc/ssl/certs/ca-certificates.crt")
+    env.Command("#editor/certs_compressed.gen.h", "/etc/ssl/certs/ca-certificates.crt", make_certs_header)
 
     import glob
     path = env.Dir('.').abspath
