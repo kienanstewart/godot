@@ -5,20 +5,32 @@ export DH_VERBOSE = 1
 # @see chapter 4.9.1 in https://www.debian.org/doc/debian-policy/ch-source.html
 NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 # see FEATURE AREAS in dpkg-buildflags(1)
-export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 # see ENVIRONMENT in dpkg-buildflags(1)
 # package maintainers to append CFLAGS
-#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+export DEB_CFLAGS_MAINT_APPEND  = -fpie -pie
 # package maintainers to append LDFLAGS
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/buildflags.mk
+
+# These may not be needed after adding include /usr/share/dpkg/buildflags.mk
+CFLAGS+=$(shell dpkg-buildflags --get CFLAGS)
+CXXFLAGS+=$(shell dpkg-buildflags --get CXXFLAGS)
+LDFLAGS+=$(shell dpkg-buildflags --get LDFLAGS)
+#echo "CFLAGS: $(CFLAGS)"
+#echo "CXXFLAGS: $(CXXFLAGS)"
+#echo "LDFLAGS: $(LDFLAGS)"
+
 SCONS_OPTIONS = bits=64 use_llvm=yes builtin_openssl=no builtin_freetype=no builtin_glew=no builtin_libogg=no builtin_libpng=no builtin_libtheora=no builtin_libvorbis=no builtin_libwebp=no builtin_opus=no builtin_zlib=no
 
 override_dh_auto_build:
 	dh_auto_build
-	BUILD_REVISION=debian scons platform=x11 tools=yes target=release_debug $(SCONS_OPTIONS) -j $(NUMJOBS)
-	BUILD_REVISION=debian scons platform=x11 tools=no target=release $(SCONS_OPTIONS) -j $(NUMJOBS)
-	BUILD_REVISION=debian scons platform=server tools=yes target=release_debug $(SCONS_OPTIONS) -j $(NUMJOBS)
+	CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=x11 tools=yes target=release_debug debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
+	CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=x11 tools=no target=release debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
+	CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=server tools=yes target=release_debug debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
 
 # maybe there is a built-in helper for scons
 override_dh_clean:

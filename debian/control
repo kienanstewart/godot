@@ -28,5 +28,5 @@ Package: godot2-server
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Headless Godot game engine run-time
- Godot is an advanced, feature packge, multi-platform 2D and 3D game engine.
+ Godot is an advanced, feature packed, multi-platform 2D and 3D game engine.
  This package provides a command-line only version of the program.
