@@ -3,3 +3,5 @@ remove-thirdparty-ca-certificates
 change-ca-cert-source-path
 add-upstream-man-page
 remove-unneeded-thirdparty-libraries
+fix-lintian-signalled-spelling-errors
+fix-typo-in-code-editor

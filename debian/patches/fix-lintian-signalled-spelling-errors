@@ -1,0 +1,170 @@
+Description: Fix common spelling errors in source
+ Lintian signalled some common spelling errors which should be fixed.
+ .
+ godot (2.1.4-stable-1) UNRELEASED; urgency=medium
+ .
+   * Initial release (Closes: #793057)
+   * This is my first package
+Author: Kienan Stewart <kienan.stewart@burntworld.ca>
+Bug-Debian: https://bugs.debian.org/793057
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: 2017-12-28
+
+--- godot-2.1.4-stable.orig/doc/base/classes.xml
++++ godot-2.1.4-stable/doc/base/classes.xml
+@@ -11356,7 +11356,7 @@
+ 		Editor plugin to control the export process.
+ 	</brief_description>
+ 	<description>
+-		This plugin is added into EditorImportExport and allows to modify the behavior of the export process for individual files.
++		This plugin is added into EditorImportExport and allows one to modify the behavior of the export process for individual files.
+ 	</description>
+ 	<methods>
+ 		<method name="custom_export" qualifiers="virtual">
+@@ -12590,7 +12590,7 @@
+ 			</argument>
+ 			<description>
+ 				Set the volume scale for an individual channel of the stream, with the same value range as [method set_volume]. The channel number depends on the stream format. For example, MIDIs range from 0 to 15, and MODs from 0 to 63.
+-				Many stream formats are multichannel, so this allows to affect only a part of the music.
++				Many stream formats are multichannel, so this allows one to affect only a part of the music.
+ 			</description>
+ 		</method>
+ 		<method name="set_loop">
+@@ -12625,7 +12625,7 @@
+ 			<argument index="0" name="tempo_scale" type="float">
+ 			</argument>
+ 			<description>
+-				Set the tempo multiplier. This allows to slow down or speed up the music, without affecting its pitch.
++				Set the tempo multiplier. This allows one to slow down or speed up the music, without affecting its pitch.
+ 			</description>
+ 		</method>
+ 		<method name="set_volume">
+@@ -21406,7 +21406,7 @@
+ 		Node that instances meshes into a scenario.
+ 	</brief_description>
+ 	<description>
+-		MeshInstance is a [Node] that takes a [Mesh] resource and adds it to the current scenario by creating an instance of it. This is the class most often used to get 3D geometry rendered and can be used to instance a single [Mesh] in many places. This allows to reuse geometry and save on resources. When a [Mesh] has to be instanced more than thousands of times at close proximity, consider using a [MultiMesh] in a [MultiMeshInstance] instead.
++		MeshInstance is a [Node] that takes a [Mesh] resource and adds it to the current scenario by creating an instance of it. This is the class most often used to get 3D geometry rendered and can be used to instance a single [Mesh] in many places. This allows one to reuse geometry and save on resources. When a [Mesh] has to be instanced more than thousands of times at close proximity, consider using a [MultiMesh] in a [MultiMeshInstance] instead.
+ 	</description>
+ 	<methods>
+ 		<method name="create_convex_collision">
+@@ -22744,7 +22744,7 @@
+ 			<argument index="0" name="owner" type="Node">
+ 			</argument>
+ 			<description>
+-				Set the node owner. A node can have any other node as owner (as long as a valid parent, grandparent, etc ascending in the tree). When saving a node (using SceneSaver) all the nodes it owns will be saved with it. This allows to create complex SceneTrees, with instancing and subinstancing.
++				Set the node owner. A node can have any other node as owner (as long as a valid parent, grandparent, etc ascending in the tree). When saving a node (using SceneSaver) all the nodes it owns will be saved with it. This allows one to create complex SceneTrees, with instancing and subinstancing.
+ 			</description>
+ 		</method>
+ 		<method name="set_pause_mode">
+@@ -32467,7 +32467,7 @@
+ 		Interactive Resource Loader.
+ 	</brief_description>
+ 	<description>
+-		Interactive Resource Loader. This object is returned by ResourceLoader when performing an interactive load. It allows to load with high granularity, so this is mainly useful for displaying load bars/percentages.
++		Interactive Resource Loader. This object is returned by ResourceLoader when performing an interactive load. It allows one to load with high granularity, so this is mainly useful for displaying load bars/percentages.
+ 	</description>
+ 	<methods>
+ 		<method name="get_resource">
+@@ -32569,7 +32569,7 @@
+ 			<argument index="1" name="type_hint" type="String" default="&quot;&quot;">
+ 			</argument>
+ 			<description>
+-				Load a resource interactively, the returned object allows to load with high granularity.
++				Load a resource interactively, the returned object allows one to load with high granularity.
+ 			</description>
+ 		</method>
+ 		<method name="set_abort_on_missing_resources">
+@@ -33268,7 +33268,7 @@
+ 			<argument index="0" name="mode" type="int">
+ 			</argument>
+ 			<description>
+-				Set the body mode, from the MODE_* enum. This allows to change to a static body or a character body.
++				Set the body mode, from the MODE_* enum. This allows one to change to a static body or a character body.
+ 			</description>
+ 		</method>
+ 		<method name="set_sleeping">
+@@ -33658,7 +33658,7 @@
+ 			<argument index="0" name="mode" type="int">
+ 			</argument>
+ 			<description>
+-				Set the body mode, from the MODE_* enum. This allows to change to a static body or a character body.
++				Set the body mode, from the MODE_* enum. This allows one to change to a static body or a character body.
+ 			</description>
+ 		</method>
+ 		<method name="set_sleeping">
+@@ -40320,7 +40320,7 @@
+ 		Tabbed Container.
+ 	</brief_description>
+ 	<description>
+-		Tabbed Container. Contains several children controls, but shows only one at the same time. Clicking on the top tabs allows to change the currently visible one.
++		Tabbed Container. Contains several children controls, but shows only one at the same time. Clicking on the top tabs allows one to change the currently visible one.
+ 		Children controls of this one automatically.
+ 	</description>
+ 	<methods>
+--- godot-2.1.4-stable.orig/editor/code_editor.cpp
++++ godot-2.1.4-stable/editor/code_editor.cpp
+@@ -691,7 +691,7 @@ void FindReplaceDialog::_replace() {
+ 
+ 		text_edit->set_v_scroll(vsval);
+ 		//		text_edit->set_h_scroll(hsval);
+-		error_label->set_text(vformat(TTR("Replaced %d ocurrence(s)."), rc));
++		error_label->set_text(vformat(TTR("Replaced %d occurrence(s)."), rc));
+ 
+ 		//hide();
+ 	} else {
+--- godot-2.1.4-stable.orig/main/tests/test_gui.cpp
++++ godot-2.1.4-stable/main/tests/test_gui.cpp
+@@ -314,7 +314,7 @@ public:
+ 		//richtext->add_text("By the way, testing indent levels! Yohohoho! Everything should appear to the right sightly here!\n");
+ 		//richtext->pop();
+ 		richtext->push_meta("http://www.scrollingcapabilities.xz");
+-		richtext->add_text("This allows to test for the scrolling capabilities ");
++		richtext->add_text("This allows one to test for the scrolling capabilities ");
+ 		richtext->pop();
+ 		richtext->add_text("of the rich text label for huge text (not like this text will really be huge but, you know).\nAs long as it is so long that it will work nicely for a test/demo, then it's welcomed in my book...\nChanging subject, the day is cloudy today and I'm wondering if I'll get che chance to travel somewhere nice. Sometimes, watching the clouds from satellite images may give a nice insight about how pressure zones in our planet work, althogh it also makes it pretty obvious to see why most weather forecasts get it wrong so often.\nClouds are so difficult to predict!\nBut it's pretty cool how our civilization has adapted to having water falling from the sky each time it rains...");
+ 		//richtext->add_text("Hello!\nGorgeous..");
+--- godot-2.1.4-stable.orig/modules/gdscript/gd_parser.cpp
++++ godot-2.1.4-stable/modules/gdscript/gd_parser.cpp
+@@ -3012,7 +3012,7 @@ void GDParser::_parse_class(ClassNode *p
+ 							ConstantNode *cn = static_cast<ConstantNode *>(subexpr);
+ 							if (cn->value.get_type() == Variant::NIL) {
+ 
+-								_set_error("Can't accept a null constant expression for infering export type.");
++								_set_error("Can't accept a null constant expression for inferring export type.");
+ 								return;
+ 							}
+ 							member._export.type = cn->value.get_type();
+--- godot-2.1.4-stable.orig/scene/2d/physics_body_2d.cpp
++++ godot-2.1.4-stable/scene/2d/physics_body_2d.cpp
+@@ -858,7 +858,7 @@ String RigidBody2D::get_configuration_wa
+ 		if (warning != String()) {
+ 			warning += "\n";
+ 		}
+-		warning += TTR("Size changes to RigidBody2D (in character or rigid modes) will be overriden by the physics engine when running.\nChange the size in children collision shapes instead.");
++		warning += TTR("Size changes to RigidBody2D (in character or rigid modes) will be overridden by the physics engine when running.\nChange the size in children collision shapes instead.");
+ 	}
+ 
+ 	return warning;
+--- godot-2.1.4-stable.orig/scene/3d/physics_body.cpp
++++ godot-2.1.4-stable/scene/3d/physics_body.cpp
+@@ -771,7 +771,7 @@ String RigidBody::get_configuration_warn
+ 		if (warning != String()) {
+ 			warning += "\n";
+ 		}
+-		warning += TTR("Size changes to RigidBody (in character or rigid modes) will be overriden by the physics engine when running.\nChange the size in children collision shapes instead.");
++		warning += TTR("Size changes to RigidBody (in character or rigid modes) will be overridden by the physics engine when running.\nChange the size in children collision shapes instead.");
+ 	}
+ 
+ 	return warning;
