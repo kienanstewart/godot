@@ -8,7 +8,9 @@ NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 
 # see ENVIRONMENT in dpkg-buildflags(1)
 # package maintainers to append CFLAGS
-export DEB_CFLAGS_MAINT_APPEND  = -fpie -pie
+export DEB_CFLAGS_MAINT_APPEND  = -fpie -pie -D_FORTIFY_SOURCE=2
+export DEB_CXXFLAGS_MAINT_APPEND = -fpie -pie -D_FORTIFY_SOURCE=2
+export DEB_CPPFLAGS_MAINT_APPEND = -fpie -pie -D_FORTIFY_SOURCE=2
 # package maintainers to append LDFLAGS
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
@@ -20,17 +22,18 @@ include /usr/share/dpkg/buildflags.mk
 CFLAGS+=$(shell dpkg-buildflags --get CFLAGS)
 CXXFLAGS+=$(shell dpkg-buildflags --get CXXFLAGS)
 LDFLAGS+=$(shell dpkg-buildflags --get LDFLAGS)
-#echo "CFLAGS: $(CFLAGS)"
-#echo "CXXFLAGS: $(CXXFLAGS)"
-#echo "LDFLAGS: $(LDFLAGS)"
+CPPFLAGS+=$(shell dpkg-buildflags --get CPPFLAGS)
 
 SCONS_OPTIONS = bits=64 use_llvm=yes builtin_openssl=no builtin_freetype=no builtin_glew=no builtin_libogg=no builtin_libpng=no builtin_libtheora=no builtin_libvorbis=no builtin_libwebp=no builtin_opus=no builtin_zlib=no
 
 override_dh_auto_build:
+	echo "CFLAGS: $(CFLAGS)"
+	echo "CXXFLAGS: $(CXXFLAGS)"
+	echo "LDFLAGS: $(LDFLAGS)"
 	dh_auto_build
-	CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=x11 tools=yes target=release_debug debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
-	CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=x11 tools=no target=release debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
-	CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=server tools=yes target=release_debug debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
+	CCFLAGS="$(CXXFLAGS)" LINKFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=x11 tools=yes target=release_debug debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
+	CCFLAGS="$(CXXFLAGS)" LINKFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=x11 tools=no target=release debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
+	CCFLAGS="$(CXXFLAGS)" LINKFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=server tools=yes target=release_debug debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
 
 # maybe there is a built-in helper for scons
 override_dh_clean:
