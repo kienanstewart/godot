@@ -241,7 +241,7 @@ void FindReplaceBar::_replace_all() {
 	}
 
 	text_edit->set_v_scroll(vsval);
-	set_error(vformat(TTR("Replaced %d Ocurrence(s)."), rc));
+	set_error(vformat(TTR("Replaced %d Occurrence(s)."), rc));
 }
 
 void FindReplaceBar::_get_search_from(int &r_line, int &r_col) {
@@ -691,7 +691,7 @@ void FindReplaceDialog::_replace() {
 
 		text_edit->set_v_scroll(vsval);
 		//		text_edit->set_h_scroll(hsval);
-		error_label->set_text(vformat(TTR("Replaced %d ocurrence(s)."), rc));
+		error_label->set_text(vformat(TTR("Replaced %d occurrence(s)."), rc));
 
 		//hide();
 	} else {

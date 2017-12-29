@@ -3012,7 +3012,7 @@ void GDParser::_parse_class(ClassNode *p_class) {
 							ConstantNode *cn = static_cast<ConstantNode *>(subexpr);
 							if (cn->value.get_type() == Variant::NIL) {
 
-								_set_error("Can't accept a null constant expression for infering export type.");
+								_set_error("Can't accept a null constant expression for inferring export type.");
 								return;
 							}
 							member._export.type = cn->value.get_type();
