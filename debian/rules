@@ -31,9 +31,9 @@ override_dh_auto_build:
 	echo "CXXFLAGS: $(CXXFLAGS)"
 	echo "LDFLAGS: $(LDFLAGS)"
 	dh_auto_build
-	CCFLAGS="$(CXXFLAGS)" LINKFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=x11 tools=yes target=release_debug debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
-	CCFLAGS="$(CXXFLAGS)" LINKFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=x11 tools=no target=release debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
-	CCFLAGS="$(CXXFLAGS)" LINKFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian scons platform=server tools=yes target=release_debug debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS)
+	scons platform=x11 tools=yes target=release_debug debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS) CCFLAGS="$(CXXFLAGS)" LINKFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian
+	scons platform=x11 tools=no target=release debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS) CCFLAGS="$(CXXFLAGS)" LINKFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian
+	scons platform=server tools=yes target=release_debug debug_release=yes $(SCONS_OPTIONS) -j $(NUMJOBS) CCFLAGS="$(CXXFLAGS)" LINKFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" BUILD_REVISION=debian
 
 # maybe there is a built-in helper for scons
 override_dh_clean:
