@@ -10,7 +10,7 @@ Vcs-Browser: https://github.com/godotengine/godot
 
 Package: godot2
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libx11, libxinerama1, libxcursor1, libxrandr2, libfreetype6, libpng16-16, libasound2, libpulse0, zlib1g, libgl1-mesa-glx, libgcc1, libwebp6, libtheora0, libvorbis0a, libopus0, libopusfile0, libglew-2.0
+Depends: ${shlibs:Depends}, ${misc:Depends}, libx11-6, libxinerama1, libxcursor1, libxrandr2, libfreetype6, libpng16-16, libasound2, libpulse0, zlib1g, libgl1-mesa-glx, libgcc1, libwebp6, libtheora0, libvorbis0a, libopus0, libopusfile0, libglew2.0
 Description: Full 2D and 3D game engine with editor
  Godot is an advanced, feature packed, multi-platform 2D and 3D game engine.
  It provides a huge set of common tools, so you can just focus on making
@@ -18,14 +18,14 @@ Description: Full 2D and 3D game engine with editor
 
 Package: godot2-runner
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libx11, libxinerama1, libxcursor1, libxrandr2, libfreetype6, libpng16-16, libasound2, libpulse0, zlib1g, libgl1-mesa-glx, libgcc1, libwebp6, libtheora0, libvorbis0a, libopus0, libopusfile0, libglew-2.0
+Depends: ${shlibs:Depends}, ${misc:Depends}, libx11-6, libxinerama1, libxcursor1, libxrandr2, libfreetype6, libpng16-16, libasound2, libpulse0, zlib1g, libgl1-mesa-glx, libgcc1, libwebp6, libtheora0, libvorbis0a, libopus0, libopusfile0, libglew2.0
 Description: Godot game engine run-time
  Godot is an advanced, feature packed, multi-platform 2D and 3D game engine.
  This package allows games to be run from source or data-pack.
 
 Package: godot2-server
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libx11, libxinerama1, libxcursor1, libxrandr2, libfreetype6, libpng16-16, libasound2, libpulse0, zlib1g, libgl1-mesa-glx, libgcc1, libwebp6, libtheora0, libvorbis0a, libopus0, libopusfile0, libglew-2.0
+Depends: ${shlibs:Depends}, ${misc:Depends}, libx11-6, libxinerama1, libxcursor1, libxrandr2, libfreetype6, libpng16-16, libasound2, libpulse0, zlib1g, libgl1-mesa-glx, libgcc1, libwebp6, libtheora0, libvorbis0a, libopus0, libopusfile0, libglew2.0
 Description: Headless Godot game engine run-time
  Godot is an advanced, feature packed, multi-platform 2D and 3D game engine.
  This package provides a command-line only version of the program.
