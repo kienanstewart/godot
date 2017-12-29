@@ -94,7 +94,7 @@ Comment: Source Code Pro font
 Copyright: 2010, 2012, Adobe Systems Incorporated
 License: OFL-1.1
 
-Files: ./thirdparty/jpeg_compressor/*
+Files: ./thirdparty/jpeg-compressor/*
 Comment: jpeg-compressor
 Copyright: 2012, Rich Geldreich
 License: public-domain
