@@ -3,7 +3,7 @@ Section: games
 Priority: optional
 Maintainer: Kienan Stewart <kienan.stewart@burntworld.ca>
 Build-Depends: debhelper (>= 9), clang, scons, libx11-dev, libxinerama-dev, libxcursor-dev, libxrandr-dev, libfreetype6-dev, libpng-dev, libasound2-dev, libpulse-dev, zlib1g-dev, libgl1-mesa-dev, libstdc++-6-dev, libgcc-6-dev, libssl-dev, libglu1-mesa-dev, libwebp-dev, libtheora-dev, libvorbis-dev, libopus-dev, libopusfile-dev, libglew-dev, ca-certificates
-Standards-Version: 3.9.8
+Standards-Version: 4.1.2
 Homepage: https://godotengine.org
 Vcs-Git: https://github.com/godotengine/godot.git
 Vcs-Browser: https://github.com/godotengine/godot
