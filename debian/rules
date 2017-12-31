@@ -12,17 +12,11 @@ export DEB_CFLAGS_MAINT_APPEND  = -fpie -pie -D_FORTIFY_SOURCE=2
 export DEB_CXXFLAGS_MAINT_APPEND = -fpie -pie -D_FORTIFY_SOURCE=2
 export DEB_CPPFLAGS_MAINT_APPEND = -fpie -pie -D_FORTIFY_SOURCE=2
 # package maintainers to append LDFLAGS
-#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+export DEB_LDFLAGS_MAINT_APPEND = -fpie -pie
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/buildflags.mk
-
-# These may not be needed after adding include /usr/share/dpkg/buildflags.mk
-CFLAGS+=$(shell dpkg-buildflags --get CFLAGS)
-CXXFLAGS+=$(shell dpkg-buildflags --get CXXFLAGS)
-LDFLAGS+=$(shell dpkg-buildflags --get LDFLAGS)
-CPPFLAGS+=$(shell dpkg-buildflags --get CPPFLAGS)
 
 SCONS_OPTIONS = bits=64 use_llvm=yes builtin_openssl=no builtin_freetype=no builtin_glew=no builtin_libogg=no builtin_libpng=no builtin_libtheora=no builtin_libvorbis=no builtin_libwebp=no builtin_opus=no builtin_zlib=no
 
